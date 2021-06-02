@@ -59,7 +59,7 @@ Resources:
                 Owner: !Ref GithubRepoOwner
                 Repo: !Ref GithubRepoName
                 Branch: !Ref GithubRepoBranch
-                OAuthToken: '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'
+                OAuthToken: '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'
                 PollForSourceChanges: false
               RunOrder: 1
         - Name: Deploy
@@ -82,7 +82,7 @@ Resources:
     Type: AWS::CodePipeline::Webhook
     Properties:
       AuthenticationConfiguration:
-        SecretToken: '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'
+        SecretToken: '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'
       Filters:
         - JsonPath: $.ref
           MatchEquals: refs/heads/{Branch}
@@ -131,7 +131,7 @@ Resources:
             - Name: GIT_BRANCH
               Value: !Ref GithubRepoBranch
             - Name: GIT_TOKEN
-              Value: "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"
+              Value: "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"
         Name: !Sub ${AWS::StackName}
         ServiceRole: !Ref DeployBackendBuildRole
         Source:
