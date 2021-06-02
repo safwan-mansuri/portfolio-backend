@@ -8,4 +8,4 @@ const getProject = (event) => {
   return response;
 }
 
-module.exports = getProject;
+module.exports = { getProject };

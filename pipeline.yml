@@ -234,3 +234,17 @@ Resources:
                   - secretsmanager:GetSecretValue
                   - ssm:GetParameter
                 Resource: "*"
+
+  ProjectsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: projects-table
+      AttributeDefinitions:
+        - AttributeName: "uuid"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "uuid"
+          KeyType: "HASH"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
