@@ -1,9 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Deployment pipeline for AIS Tenant Managament Service
 Parameters:
+  GithubRepoOwner:
+    Type: String
+    Default: safwan-mansuri
   GithubRepoName:
     Type: String
-    Default: ais-service-tenant-management
+    Default: portfolio-backend
   GithubRepoBranch:
     Type: String
     Default: master
@@ -53,9 +56,10 @@ Resources:
               OutputArtifacts:
                 - Name: SourceOutput
               Configuration:
+                Owner: !Ref GithubRepoOwner
                 Repo: !Ref GithubRepoName
                 Branch: !Ref GithubRepoBranch
-                OAuthToken: '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'
+                OAuthToken: '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'
                 PollForSourceChanges: false
               RunOrder: 1
         - Name: Deploy
@@ -74,9 +78,36 @@ Resources:
                 ProjectName: !Ref DeployBackendBuild
             RunOrder: 1
   
-
-
-
+  PipelineWebhook:
+    Type: AWS::CodePipeline::Webhook
+    Properties:
+      AuthenticationConfiguration:
+        SecretToken: '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'
+      Filters:
+        - JsonPath: $.ref
+          MatchEquals: refs/heads/{Branch}
+      Authentication: GITHUB_HMAC
+      TargetPipeline: !Ref Pipeline
+      TargetAction: Source
+      Name: !Ref AWS::StackName
+      TargetPipelineVersion: 1
+      RegisterWithThirdParty: true
+  PipelineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service: codepipeline.amazonaws.com
+          Action: sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodePipelineFullAccess
+        - arn:aws:iam::aws:policy/AWSCodeBuildDeveloperAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AWSLambda_FullAccess
 
 
   DeployBackendBuild:
@@ -100,8 +131,7 @@ Resources:
             - Name: GIT_BRANCH
               Value: !Ref GithubRepoBranch
             - Name: GIT_TOKEN
-              Type: SECRETS_MANAGER
-              Value: "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"
+              Value: "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"
         Name: !Sub ${AWS::StackName}
         ServiceRole: !Ref DeployBackendBuildRole
         Source:
