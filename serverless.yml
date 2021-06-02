@@ -12,5 +12,11 @@ provider:
 
 
 functions:
-  hello:
-    handler: handler.hello
+  getProject:
+    ${file(handlers/get-project.yml)}
+
+
+
+
+plugins:
+  - serverless-iam-roles-per-function

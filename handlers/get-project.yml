@@ -1,0 +1,11 @@
+handler: handlers/get-project.handler
+events:
+  - http:
+      path: /get-profile
+      method: get
+      cors: true
+iamRoleStatementsName: get-profile
+iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+     - "lambda:*"
